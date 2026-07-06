@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phiếu khảo sát WP4 - Tái ngữ cảnh hóa khung năng lực số</title>
+<style>
+  :root{
+    --paper:#FBFAF7;--ink:#191B1F;--ink-soft:#4A4F57;--line:#D9D6CE;--line-soft:#EAE7DF;
+    --pine:#0E5A50;--pine-deep:#0A413A;--warn:#8A3B2E;--focus:#0E5A50;--radius:5px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:640px;margin:0 auto;padding:0 18px 96px;}
+  header.masthead{border-bottom:2px solid var(--ink);padding:26px 0 16px;margin-bottom:8px;}
+  .eyebrow{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pine);font-weight:600;margin:0 0 8px;}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:23px;line-height:1.25;font-weight:600;margin:0 0 6px;letter-spacing:-.01em;}
+  .sub{color:var(--ink-soft);font-size:14.5px;margin:0;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px;margin:18px 0;}
+  .card.note{background:#F4F6F5;border-color:#CFE0DC;}
+  .card h2{font-family:Georgia,serif;font-size:16.5px;font-weight:600;margin:0 0 4px;}
+  .card .lead{color:var(--ink-soft);font-size:14px;margin:0 0 4px;}
+  .section-index{display:flex;align-items:baseline;gap:10px;margin:30px 0 4px;}
+  .section-index .num{font-family:Georgia,serif;font-size:14px;color:var(--pine);font-weight:600;
+    border:1px solid var(--pine);border-radius:50%;width:26px;height:26px;display:inline-flex;
+    align-items:center;justify-content:center;flex:none;}
+  .section-index h3{font-size:15px;font-weight:600;margin:0;}
+  .section-index .rq{margin-left:auto;font-size:11px;letter-spacing:.06em;color:var(--pine);
+    border:1px solid var(--line);border-radius:20px;padding:2px 9px;white-space:nowrap;align-self:center;}
+  .field{margin:16px 0;}
+  label.q{display:block;font-weight:600;font-size:15px;margin:0 0 3px;}
+  label.q .req{color:var(--warn);font-weight:600;}
+  .hint{color:var(--ink-soft);font-size:13px;margin:0 0 8px;}
+  input[type=text],input[type=email],textarea,select{width:100%;font:inherit;color:var(--ink);background:#fff;
+    border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;min-height:44px;}
+  textarea{min-height:90px;resize:vertical;line-height:1.5;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px rgba(14,90,80,.16);}
+  .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line-soft);
+    border-radius:var(--radius);margin:6px 0;cursor:pointer;background:#fff;}
+  .opt:hover{border-color:var(--line);}
+  .opt input{margin-top:3px;flex:none;width:18px;height:18px;accent-color:var(--pine);}
+  .opt span{font-size:14.5px;}
+  .likert{margin:14px 0;padding:12px;border:1px solid var(--line-soft);border-radius:var(--radius);}
+  .likert .stem{font-weight:600;font-size:14.5px;margin:0 0 8px;}
+  .scale{display:flex;gap:6px;flex-wrap:wrap;}
+  .scale label{flex:1 1 46px;text-align:center;font-size:12.5px;color:var(--ink-soft);
+    border:1px solid var(--line-soft);border-radius:var(--radius);padding:8px 4px;cursor:pointer;}
+  .scale label input{display:block;margin:0 auto 4px;accent-color:var(--pine);}
+  .scale label:has(input:checked){border-color:var(--pine);background:#EAF3F1;color:var(--ink);font-weight:600;}
+  .scale-anchor{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-soft);margin-top:4px;}
+  .block{display:none;}
+  .block-head{margin:34px 0 6px;padding:12px 14px;background:#F0F4F3;border-left:3px solid var(--pine);border-radius:0 var(--radius) var(--radius) 0;}
+  .block-head .tag{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pine);font-weight:600;}
+  .block-head .name{font-family:Georgia,serif;font-size:16px;font-weight:600;margin-top:2px;}
+  .consent-check{display:flex;gap:11px;align-items:flex-start;margin-top:12px;}
+  .consent-check input{margin-top:3px;width:20px;height:20px;flex:none;accent-color:var(--pine);}
+  .consent-check label{font-size:14px;}
+  .actions{position:sticky;bottom:0;background:linear-gradient(to top,var(--paper) 72%,transparent);padding:16px 0 8px;margin-top:8px;}
+  button.submit{width:100%;font:inherit;font-weight:600;font-size:16px;color:#fff;background:var(--pine);
+    border:none;border-radius:var(--radius);padding:15px;min-height:52px;cursor:pointer;letter-spacing:.01em;}
+  button.submit:hover{background:var(--pine-deep);}
+  .err-msg{color:var(--warn);font-size:13.5px;margin:8px 2px 0;display:none;}
+  .state{display:none;text-align:center;padding:44px 10px;}
+  .state h2{font-family:Georgia,serif;font-size:20px;margin:0 0 8px;}
+  .state p{color:var(--ink-soft);margin:0 auto;max-width:420px;}
+  .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--pine);border-radius:50%;
+    margin:0 auto 18px;animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion:reduce){.spinner{animation:none;}}
+  footer{color:var(--ink-soft);font-size:12.5px;border-top:1px solid var(--line-soft);margin-top:26px;padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Đề tài NAFOSTED · WP4</p>
+    <h1>Tái ngữ cảnh hóa khung năng lực số trong đào tạo giáo viên</h1>
+    <p class="sub">Phiếu ghi nhận ý kiến cá nhân, điền trước phần thảo luận nhóm</p>
+  </header>
+
+  <form id="mainForm" novalidate>
+
+    <div class="card note">
+      <h2>Thông tin tham gia</h2>
+      <p class="lead">Phiếu ghi nhận ý kiến cá nhân của thầy/cô về cách khung năng lực số quốc gia (Thông tư 02/2025 dành cho người học; Thông tư 18/2026 dành cho giáo viên, cán bộ quản lý) đang được diễn giải và triển khai. Thầy/cô trả lời độc lập, trước phần thảo luận nhóm.</p>
+      <p class="lead">Tham gia là tự nguyện và ẩn danh. Dữ liệu được mã hóa, chỉ dùng cho mục đích nghiên cứu, không nêu danh tính trong mọi ấn phẩm. Có thể bỏ trống bất kỳ câu nào.</p>
+      <div class="consent-check">
+        <input type="checkbox" id="consent" required>
+        <label for="consent">Tôi đã đọc thông tin trên và đồng ý tham gia. <span class="req">*</span></label>
+      </div>
+    </div>
+
+    <!-- ===== ĐỊNH DANH CHUNG ===== -->
+    <div class="section-index"><span class="num">1</span><h3>Đơn vị và vai trò</h3></div>
+    <div class="field">
+      <label class="q" for="truong">Trường / đơn vị công tác <span class="req">*</span></label>
+      <input type="text" id="truong" name="truong" autocomplete="organization" required>
+    </div>
+    <div class="field">
+      <label class="q" for="vai_tro">Vai trò hiện nay <span class="req">*</span></label>
+      <select id="vai_tro" name="vai_tro" required>
+        <option value="">-- chọn --</option>
+        <option value="Giảng viên">Giảng viên</option>
+        <option value="Quản lý CTĐT, tổ bộ môn hoặc tương đương">Quản lý CTĐT, tổ bộ môn hoặc tương đương</option>
+        <option value="Trưởng, phó khoa hoặc tương đương">Trưởng, phó khoa hoặc tương đương</option>
+        <option value="Lãnh đạo phòng Đào tạo, Khảo thí - ĐBCL">Lãnh đạo phòng Đào tạo, Khảo thí - ĐBCL</option>
+        <option value="Lãnh đạo trường hoặc tương đương">Lãnh đạo trường hoặc tương đương</option>
+        <option value="Chuyên gia hệ thống: tạp chí, viện nghiên cứu, vụ, cục">Chuyên gia hệ thống: tạp chí, viện nghiên cứu, vụ, cục</option>
+        <option value="Khác">Khác</option>
+      </select>
+      <p class="hint" id="roleHint" style="display:none"></p>
+    </div>
+    <div class="field">
+      <label class="q" for="khoa_bomon">Khoa / bộ môn / đơn vị</label>
+      <input type="text" id="khoa_bomon" name="khoa_bomon">
+    </div>
+    <div class="field">
+      <label class="q" for="so_nam">Số năm công tác trong lĩnh vực đào tạo giáo viên</label>
+      <input type="text" id="so_nam" name="so_nam" inputmode="numeric">
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BẢN D - GIẢNG VIÊN                                            -->
+    <!-- ============================================================ -->
+    <div class="block" data-block="D">
+      <div class="block-head"><div class="tag">Bản D</div><div class="name">Giảng viên tầng thực thi</div></div>
+
+      <div class="section-index"><span class="num">2</span><h3>Kênh tiếp nhận quy định</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q">Thầy/cô biết đến khung năng lực số và các quy định về AI của trường qua kênh nào?</label>
+        <p class="hint">Có thể chọn nhiều mục.</p>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Văn bản, công văn"><span>Văn bản, công văn</span></label>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Tập huấn"><span>Tập huấn, hội thảo</span></label>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Yêu cầu sửa đề cương"><span>Yêu cầu rà soát, sửa đề cương</span></label>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Đồng nghiệp"><span>Đồng nghiệp trao đổi</span></label>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Tự tìm hiểu"><span>Tự tìm hiểu</span></label>
+        <label class="opt"><input type="checkbox" name="d_kenh" value="Chưa biết"><span>Chưa biết đến</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="d_hieu">Lần đầu nghe đến, thầy/cô hiểu yêu cầu chính là gì?</label>
+        <input type="text" id="d_hieu" name="d_hieu">
+      </div>
+
+      <div class="section-index"><span class="num">3</span><h3>Lần điều chỉnh đề cương gần nhất</h3><span class="rq">RQ1, RQ2</span></div>
+      <div class="field">
+        <label class="q" for="d_dieuchinh">Lần gần nhất phải sửa đề cương hay bài giảng vì các yêu cầu này: thầy/cô đã thay đổi gì, và dựa vào đâu để biết phải sửa thế nào?</label>
+        <textarea id="d_dieuchinh" name="d_dieuchinh"></textarea>
+      </div>
+      <div class="field">
+        <label class="q">Khi đó có ai hướng dẫn không?</label>
+        <label class="opt"><input type="radio" name="d_huongdan" value="Có người hướng dẫn"><span>Có người hướng dẫn</span></label>
+        <label class="opt"><input type="radio" name="d_huongdan" value="Tự quyết"><span>Tự quyết</span></label>
+      </div>
+
+      <div class="section-index"><span class="num">4</span><h3>Thực hành dạy nội dung AI</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="d_hoatdong">Trong học phần của mình, thầy/cô đưa nội dung AI vào như thế nào? Mô tả một hoạt động cụ thể đã làm với sinh viên và cách các em phản ứng.</label>
+        <textarea id="d_hoatdong" name="d_hoatdong"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">5</span><h3>Chân dung năng lực</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="d_chandung">Một sinh viên giỏi AI trong môn của thầy/cô là người như thế nào? Có thể mô tả một em cụ thể, không cần nêu tên.</label>
+        <p class="hint">Điều gì phân biệt em đó với một em chỉ thạo thao tác công cụ?</p>
+        <textarea id="d_chandung" name="d_chandung"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">6</span><h3>Căn cứ ra quyết định</h3><span class="rq">RQ2, RQ3</span></div>
+      <div class="field">
+        <label class="q" for="d_tinhhuong">Lần gần nhất thầy/cô phải quyết một việc liên quan AI trong dạy học (bài nộp nghi dùng AI, sinh viên hỏi có được dùng không...): tình huống đó là gì?</label>
+        <input type="text" id="d_tinhhuong" name="d_tinhhuong">
+      </div>
+      <div class="field">
+        <label class="q">Lúc đó thầy/cô dựa vào đâu để quyết?</label>
+        <p class="hint">Có thể chọn nhiều mục.</p>
+        <label class="opt"><input type="checkbox" name="d_cancu" value="Quy định của trường"><span>Quy định của trường</span></label>
+        <label class="opt"><input type="checkbox" name="d_cancu" value="Khung năng lực"><span>Khung năng lực số, AI</span></label>
+        <label class="opt"><input type="checkbox" name="d_cancu" value="Tự quyết theo kinh nghiệm"><span>Tự quyết theo kinh nghiệm</span></label>
+        <label class="opt"><input type="checkbox" name="d_cancu" value="Hỏi đồng nghiệp, bộ môn"><span>Hỏi đồng nghiệp, bộ môn</span></label>
+      </div>
+      <div class="field">
+        <label class="q">Quy định của trường có vai trò gì trong tình huống đó không?</label>
+        <label class="opt"><input type="radio" name="d_vaitro_quydinh" value="Có"><span>Có</span></label>
+        <label class="opt"><input type="radio" name="d_vaitro_quydinh" value="Không"><span>Không</span></label>
+        <label class="opt"><input type="radio" name="d_vaitro_quydinh" value="Không rõ"><span>Không rõ</span></label>
+      </div>
+
+      <div class="section-index"><span class="num">7</span><h3>Nguồn hỗ trợ và vai trò bộ môn</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q">Khi cần hướng dẫn cụ thể về những việc này, thầy/cô thường hỏi ai?</label>
+        <label class="opt"><input type="checkbox" name="d_hoiai" value="Đồng nghiệp"><span>Đồng nghiệp</span></label>
+        <label class="opt"><input type="checkbox" name="d_hoiai" value="Bộ môn"><span>Bộ môn</span></label>
+        <label class="opt"><input type="checkbox" name="d_hoiai" value="Khoa"><span>Khoa</span></label>
+        <label class="opt"><input type="checkbox" name="d_hoiai" value="Phòng chức năng"><span>Phòng chức năng</span></label>
+        <label class="opt"><input type="checkbox" name="d_hoiai" value="Tự tìm hiểu"><span>Tự tìm hiểu</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="d_bomon">Bộ môn của thầy/cô có vai trò gì trong những việc này không?</label>
+        <input type="text" id="d_bomon" name="d_bomon">
+      </div>
+
+      <div class="section-index"><span class="num">8</span><h3>Mức khớp giữa quy định và lớp học</h3><span class="rq">RQ2, RQ3</span></div>
+      <div class="likert">
+        <p class="stem">Giữa những gì quy định yêu cầu và những gì thầy/cô thực sự làm trong lớp, hai bên khớp nhau đến mức nào?</p>
+        <div class="scale" data-name="d_khop">
+          <label><input type="radio" name="d_khop" value="1">1</label>
+          <label><input type="radio" name="d_khop" value="2">2</label>
+          <label><input type="radio" name="d_khop" value="3">3</label>
+          <label><input type="radio" name="d_khop" value="4">4</label>
+          <label><input type="radio" name="d_khop" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Rất lệch nhau</span><span>Rất khớp nhau</span></div>
+      </div>
+      <div class="field">
+        <label class="q" for="d_khop_vidu">Xin cho một ví dụ. Trong ví dụ đó thầy/cô ưu tiên điều gì, vì sao?</label>
+        <textarea id="d_khop_vidu" name="d_khop_vidu"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">9</span><h3>Thiết kế lý tưởng</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="d_thietke">Nếu được tự thiết kế phần năng lực AI cho sinh viên sư phạm, thầy/cô sẽ giữ gì và bỏ gì so với cách làm hiện nay? Điều đầu tiên muốn sinh viên học được là gì?</label>
+        <textarea id="d_thietke" name="d_thietke"></textarea>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BẢN B - QUẢN LÝ CTĐT, TỔ BỘ MÔN, TRƯỞNG KHOA                 -->
+    <!-- ============================================================ -->
+    <div class="block" data-block="B">
+      <div class="block-head"><div class="tag">Bản B</div><div class="name">Quản lý CTĐT, tổ bộ môn, trưởng khoa tầng điều phối</div></div>
+
+      <div class="section-index"><span class="num">2</span><h3>Kênh tiếp nhận và phản ứng đầu tiên</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q">Đơn vị biết đến hai thông tư về khung năng lực số qua kênh nào?</label>
+        <p class="hint">Có thể chọn nhiều mục.</p>
+        <label class="opt"><input type="checkbox" name="b_kenh" value="Văn bản, công văn"><span>Văn bản, công văn</span></label>
+        <label class="opt"><input type="checkbox" name="b_kenh" value="Tập huấn"><span>Tập huấn, hội thảo</span></label>
+        <label class="opt"><input type="checkbox" name="b_kenh" value="Chỉ đạo từ trường"><span>Chỉ đạo từ trường, phòng</span></label>
+        <label class="opt"><input type="checkbox" name="b_kenh" value="Tự tìm hiểu"><span>Tự tìm hiểu</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="b_dautien">Sau khi nhận được, việc đầu tiên đơn vị làm là gì? Ai là người đọc kỹ văn bản trước tiên?</label>
+        <input type="text" id="b_dautien" name="b_dautien">
+      </div>
+
+      <div class="section-index"><span class="num">3</span><h3>Quy trình chuyển hóa khung thành chương trình</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q">Những ai tham gia đưa yêu cầu về năng lực số, AI vào chương trình đào tạo?</label>
+        <label class="opt"><input type="checkbox" name="b_thamgia" value="Ban chủ nhiệm khoa"><span>Ban chủ nhiệm khoa</span></label>
+        <label class="opt"><input type="checkbox" name="b_thamgia" value="Các bộ môn"><span>Các bộ môn</span></label>
+        <label class="opt"><input type="checkbox" name="b_thamgia" value="Phòng Đào tạo"><span>Phòng Đào tạo</span></label>
+        <label class="opt"><input type="checkbox" name="b_thamgia" value="Phòng Khảo thí-ĐBCL"><span>Phòng Khảo thí - ĐBCL</span></label>
+        <label class="opt"><input type="checkbox" name="b_thamgia" value="Giảng viên trực tiếp"><span>Giảng viên trực tiếp</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="b_thoigian">Quá trình đó làm theo trình tự nào, mất bao lâu? Văn bản nào được đặt lên bàn làm căn cứ?</label>
+        <input type="text" id="b_thoigian" name="b_thoigian">
+      </div>
+
+      <div class="section-index"><span class="num">4</span><h3>Bảo lưu và điều chỉnh khi chuyển hóa</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q" for="b_baoluu">Khi đưa khung vào chuẩn đầu ra và đề cương, đơn vị giữ nguyên những gì và chỉnh lại những gì so với văn bản gốc? Vì sao? Có yêu cầu nào khó chuyển thành nội dung dạy học không?</label>
+        <textarea id="b_baoluu" name="b_baoluu"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">5</span><h3>Chân dung năng lực</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="b_chandung">Một sinh viên sư phạm có năng lực AI tốt là người như thế nào? Có thể mô tả một em cụ thể.</label>
+        <p class="hint">Điều gì khiến thầy/cô coi là có năng lực, chứ không chỉ biết dùng công cụ?</p>
+        <textarea id="b_chandung" name="b_chandung"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">6</span><h3>Quyền quyết định và thương lượng</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="b_quyetdinh">Trong việc diễn giải khung thành chương trình, ai là người quyết cuối cùng?</label>
+        <input type="text" id="b_quyetdinh" name="b_quyetdinh">
+      </div>
+      <div class="field">
+        <label class="q">Đã có lần nào đơn vị và các phòng (Đào tạo, Khảo thí - ĐBCL) hiểu khung khác nhau chưa?</label>
+        <label class="opt"><input type="radio" name="b_batdong" value="Rồi"><span>Rồi</span></label>
+        <label class="opt"><input type="radio" name="b_batdong" value="Chưa"><span>Chưa</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="b_batdong_vidu">Nếu có, xin nêu một lần cụ thể và cách hai bên đi đến phương án cuối.</label>
+        <input type="text" id="b_batdong_vidu" name="b_batdong_vidu">
+      </div>
+
+      <div class="section-index"><span class="num">7</span><h3>Khoảng trống bộ môn</h3><span class="rq">RQ1, RQ3</span></div>
+      <div class="likert">
+        <p class="stem">Các bộ môn tham gia vào việc cụ thể hóa yêu cầu năng lực số, AI đến mức nào?</p>
+        <div class="scale" data-name="b_bomon">
+          <label><input type="radio" name="b_bomon" value="1">1</label>
+          <label><input type="radio" name="b_bomon" value="2">2</label>
+          <label><input type="radio" name="b_bomon" value="3">3</label>
+          <label><input type="radio" name="b_bomon" value="4">4</label>
+          <label><input type="radio" name="b_bomon" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Hầu như không</span><span>Tham gia sâu</span></div>
+      </div>
+      <div class="field">
+        <label class="q" for="b_bomon_text">Nếu bộ môn ít tham gia, việc cụ thể hóa yêu cầu cho từng học phần hiện do ai làm?</label>
+        <input type="text" id="b_bomon_text" name="b_bomon_text">
+      </div>
+
+      <div class="section-index"><span class="num">8</span><h3>Căn cứ xử lý tình huống thực tế</h3><span class="rq">RQ2, RQ3</span></div>
+      <div class="field">
+        <label class="q" for="b_tinhhuong">Lần gần nhất đơn vị phải xử lý một việc liên quan AI (sinh viên dùng AI trong bài tập, giảng viên hỏi cách ứng xử, đoàn kiểm tra hỏi minh chứng...): đó là việc gì?</label>
+        <input type="text" id="b_tinhhuong" name="b_tinhhuong">
+      </div>
+      <div class="field">
+        <label class="q">Lúc đó đơn vị dựa vào đâu để xử lý?</label>
+        <label class="opt"><input type="checkbox" name="b_tinhhuong_cancu" value="Quy định của trường"><span>Quy định của trường</span></label>
+        <label class="opt"><input type="checkbox" name="b_tinhhuong_cancu" value="Khung năng lực"><span>Khung năng lực</span></label>
+        <label class="opt"><input type="checkbox" name="b_tinhhuong_cancu" value="Tự quyết"><span>Tự quyết ở cấp khoa, bộ môn</span></label>
+        <label class="opt"><input type="checkbox" name="b_tinhhuong_cancu" value="Xin ý kiến cấp trên"><span>Xin ý kiến cấp trên</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="b_tinhhuong_sau">Sau lần đó, đơn vị có thay đổi gì trong cách làm không?</label>
+        <input type="text" id="b_tinhhuong_sau" name="b_tinhhuong_sau">
+      </div>
+
+      <div class="section-index"><span class="num">9</span><h3>Đề xuất điều chỉnh</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="b_dexuat">Nếu được chỉnh lại khung hoặc cách triển khai hiện nay, thầy/cô sẽ thay đổi điều gì trước tiên? Điều gì cản trở đơn vị làm việc đó ngay bây giờ?</label>
+        <textarea id="b_dexuat" name="b_dexuat"></textarea>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BẢN C - LÃNH ĐẠO PHÒNG ĐÀO TẠO, KHẢO THÍ-ĐBCL               -->
+    <!-- ============================================================ -->
+    <div class="block" data-block="C">
+      <div class="block-head"><div class="tag">Bản C</div><div class="name">Lãnh đạo phòng Đào tạo, Khảo thí - ĐBCL</div></div>
+
+      <div class="field">
+        <label class="q">Thầy/cô phụ trách phòng nào?</label>
+        <label class="opt"><input type="radio" name="c_phong" value="Phòng Đào tạo"><span>Phòng Đào tạo</span></label>
+        <label class="opt"><input type="radio" name="c_phong" value="Phòng Khảo thí-ĐBCL"><span>Phòng Khảo thí - ĐBCL</span></label>
+        <label class="opt"><input type="radio" name="c_phong" value="Khác"><span>Khác</span></label>
+      </div>
+
+      <div class="section-index"><span class="num">2</span><h3>Cách phòng tiếp nhận nhiệm vụ</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q">Phòng nhận nhiệm vụ triển khai hai thông tư như thế nào?</label>
+        <label class="opt"><input type="radio" name="c_tiepnhan" value="Bằng văn bản"><span>Bằng văn bản</span></label>
+        <label class="opt"><input type="radio" name="c_tiepnhan" value="Qua trao đổi trực tiếp"><span>Qua trao đổi trực tiếp</span></label>
+        <label class="opt"><input type="radio" name="c_tiepnhan" value="Cả hai"><span>Cả hai</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="c_dautien">Việc đầu tiên phòng làm là gì?</label>
+        <input type="text" id="c_dautien" name="c_dautien">
+      </div>
+
+      <div class="section-index"><span class="num">3</span><h3>Chuyển hóa khung thành quy định, biểu mẫu</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q">Phòng đã chuyển yêu cầu của khung thành những gì?</label>
+        <label class="opt"><input type="checkbox" name="c_sanpham" value="Quy định"><span>Quy định</span></label>
+        <label class="opt"><input type="checkbox" name="c_sanpham" value="Biểu mẫu"><span>Biểu mẫu</span></label>
+        <label class="opt"><input type="checkbox" name="c_sanpham" value="Tiêu chí rà soát"><span>Tiêu chí rà soát</span></label>
+        <label class="opt"><input type="checkbox" name="c_sanpham" value="Hướng dẫn"><span>Hướng dẫn cho các khoa</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="c_soanthao">Xin kể lại quá trình soạn một trong số đó. Phòng dựa vào văn bản nào và có tham khảo ai không?</label>
+        <textarea id="c_soanthao" name="c_soanthao"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">4</span><h3>Tiêu chí thẩm định mức đạt</h3><span class="rq">RQ1, RQ2</span></div>
+      <div class="field">
+        <label class="q" for="c_tieuchi">Khi rà soát chuẩn đầu ra hay đề cương của các khoa, phòng nhìn vào những điểm nào để kết luận là đạt yêu cầu về năng lực số?</label>
+        <textarea id="c_tieuchi" name="c_tieuchi"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">5</span><h3>Năng lực AI trong bộ tiêu chí</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="c_ai_hoso">Trong các tiêu chí đó, phần năng lực AI thể hiện ra sao? Một hồ sơ học phần được coi là đáp ứng phần AI thì trông như thế nào?</label>
+        <textarea id="c_ai_hoso" name="c_ai_hoso"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">6</span><h3>Phân vai và thương lượng phòng - khoa</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="c_phanvai">Giữa phòng và các khoa, việc phân vai trong triển khai diễn ra thế nào? Xin kể một lần phòng và một khoa phải trao đổi qua lại để thống nhất cách hiểu một yêu cầu.</label>
+        <input type="text" id="c_phanvai" name="c_phanvai">
+      </div>
+
+      <div class="section-index"><span class="num">7</span><h3>Tác động của kiểm định và báo cáo</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q">Các yêu cầu kiểm định và báo cáo có ảnh hưởng đến cách phòng hướng dẫn các khoa thực hiện khung không?</label>
+        <label class="opt"><input type="radio" name="c_kiemdinh" value="Có, đáng kể"><span>Có, đáng kể</span></label>
+        <label class="opt"><input type="radio" name="c_kiemdinh" value="Có, ít"><span>Có, nhưng ít</span></label>
+        <label class="opt"><input type="radio" name="c_kiemdinh" value="Hầu như không"><span>Hầu như không</span></label>
+      </div>
+      <div class="field">
+        <label class="q" for="c_baocao">Có yêu cầu nào hiện tồn tại chủ yếu để phục vụ báo cáo không? Nếu có, đó là gì?</label>
+        <input type="text" id="c_baocao" name="c_baocao">
+      </div>
+
+      <div class="section-index"><span class="num">8</span><h3>Khoảng cách giữa hồ sơ và lớp học</h3><span class="rq">RQ2, RQ3</span></div>
+      <div class="likert">
+        <p class="stem">Những gì thể hiện trong hồ sơ và những gì diễn ra trong lớp học hiện gần nhau đến mức nào?</p>
+        <div class="scale" data-name="c_khoangcach">
+          <label><input type="radio" name="c_khoangcach" value="1">1</label>
+          <label><input type="radio" name="c_khoangcach" value="2">2</label>
+          <label><input type="radio" name="c_khoangcach" value="3">3</label>
+          <label><input type="radio" name="c_khoangcach" value="4">4</label>
+          <label><input type="radio" name="c_khoangcach" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Rất xa nhau</span><span>Rất gần nhau</span></div>
+      </div>
+      <div class="field">
+        <label class="q" for="c_khoangcach_text">Điều gì khiến thầy/cô nhận định như vậy?</label>
+        <input type="text" id="c_khoangcach_text" name="c_khoangcach_text">
+      </div>
+
+      <div class="section-index"><span class="num">9</span><h3>Độ đủ của chuẩn hiện hành</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="c_dudchuan">Một sinh viên đạt chuẩn năng lực số theo bộ tiêu chí hiện hành, theo thầy/cô, đã đủ để làm việc với AI trong nghề dạy học chưa? Nếu chưa thì thiếu nhất ở điểm nào? Vì sao?</label>
+        <textarea id="c_dudchuan" name="c_dudchuan"></textarea>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BẢN E - LÃNH ĐẠO TRƯỜNG (tầng PRF đỉnh)                      -->
+    <!-- ============================================================ -->
+    <div class="block" data-block="E">
+      <div class="block-head"><div class="tag">Bản E</div><div class="name">Lãnh đạo trường tầng chiến lược</div></div>
+
+      <div class="section-index"><span class="num">2</span><h3>Tiếp nhận chủ trương và xác lập ưu tiên</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q" for="e_uutien">Nhà trường tiếp nhận chủ trương về khung năng lực số, AI và xác định đây là ưu tiên ở mức nào? Việc triển khai được giao cho ai chủ trì?</label>
+        <textarea id="e_uutien" name="e_uutien"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">3</span><h3>Phân bổ nguồn lực</h3><span class="rq">RQ1, RQ3</span></div>
+      <div class="field">
+        <label class="q" for="e_nguonluc">Trường phân bổ nhân sự, tài chính, hạ tầng cho việc triển khai thế nào? Điều gì quyết định mức đầu tư đó?</label>
+        <textarea id="e_nguonluc" name="e_nguonluc"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">4</span><h3>Cơ chế theo dõi nội bộ</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="e_theodoi">Trường biết việc triển khai có thực chất hay chỉ dừng ở hồ sơ bằng cách nào?</label>
+        <textarea id="e_theodoi" name="e_theodoi"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">5</span><h3>Chân dung năng lực ở tầng kỳ vọng</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="e_chandung">Một sinh viên tốt nghiệp có năng lực AI đạt kỳ vọng của trường là người như thế nào?</label>
+        <textarea id="e_chandung" name="e_chandung"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">6</span><h3>Quan hệ với bên ngoài</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="e_ngoai">Quan hệ với Bộ, Sở và yêu cầu kiểm định định hình cách trường triển khai đến đâu? Có việc nào làm chủ yếu để đáp ứng bên ngoài không?</label>
+        <textarea id="e_ngoai" name="e_ngoai"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">7</span><h3>Dẫn dắt và va chạm nội bộ</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="e_dandat">Giữa các khoa, phòng, ai thực sự dẫn dắt việc này? Đã có va chạm về cách hiểu hoặc ưu tiên chưa?</label>
+        <input type="text" id="e_dandat" name="e_dandat">
+      </div>
+
+      <div class="section-index"><span class="num">8</span><h3>Đề xuất ở cấp hệ thống</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="e_dexuat">Nếu được thay đổi một điều ở cấp hệ thống (chính sách, nguồn lực, cơ chế), lãnh đạo sẽ đổi gì trước tiên?</label>
+        <textarea id="e_dexuat" name="e_dexuat"></textarea>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BẢN F - CHUYÊN GIA HỆ THỐNG (quan sát ngành, ORF-adjacent)   -->
+    <!-- ============================================================ -->
+    <div class="block" data-block="F">
+      <div class="block-head"><div class="tag">Bản F</div><div class="name">Chuyên gia hệ thống, quan sát ngành</div></div>
+
+      <div class="field">
+        <label class="q">Vị trí công tác của ông/bà gần nhất với nhóm nào?</label>
+        <label class="opt"><input type="radio" name="f_vaitro" value="Vụ, cục thuộc Bộ"><span>Vụ, cục thuộc Bộ (cơ quan quản lý nhà nước)</span></label>
+        <label class="opt"><input type="radio" name="f_vaitro" value="Viện nghiên cứu"><span>Viện nghiên cứu</span></label>
+        <label class="opt"><input type="radio" name="f_vaitro" value="Tạp chí"><span>Tạp chí, cơ quan xuất bản học thuật</span></label>
+        <label class="opt"><input type="radio" name="f_vaitro" value="Khác"><span>Khác</span></label>
+      </div>
+
+      <div class="block-head" data-fsub="Vụ, cục thuộc Bộ" style="display:none;background:#F6F1EA;border-left-color:#8A6A2E">
+        <div class="tag" style="color:#8A6A2E">Dành cho vị trí quản lý nhà nước</div>
+        <div class="name" style="font-size:15px">Các câu theo quỹ đạo công tác, trả lời phần nào áp dụng với mình</div>
+      </div>
+      <div data-fsub="Vụ, cục thuộc Bộ" style="display:none">
+        <div class="section-index"><span class="num">A1</span><h3>Truy nguồn và bản địa hóa khung</h3><span class="rq">RQ1, H5</span></div>
+        <div class="field">
+          <label class="q" for="f_orf_lineage">Nếu ông/bà tham gia soạn thảo: khi xây dựng khung, nhóm dựa trên những nguồn hay khung nào? Có nội dung nào của các khung quốc tế được điều chỉnh cho phù hợp Việt Nam không, điều chỉnh thế nào?</label>
+          <textarea id="f_orf_lineage" name="f_orf_lineage"></textarea>
+        </div>
+        <div class="section-index"><span class="num">A2</span><h3>Thao tác biên tập bên trong ORF</h3><span class="rq">RQ1</span></div>
+        <div class="field">
+          <label class="q" for="f_orf_bientap">Nếu ông/bà tham gia soạn thảo: từ dự thảo đến văn bản ban hành, có nội dung nào được thêm, bớt hay chỉnh lại không? Vì sao?</label>
+          <textarea id="f_orf_bientap" name="f_orf_bientap"></textarea>
+        </div>
+        <div class="section-index"><span class="num">A3</span><h3>Chuyển vị trí, chuyển cách nhìn</h3><span class="rq">RQ1, RQ3</span></div>
+        <div class="field">
+          <label class="q" for="f_orf_rector">Nếu ông/bà từng lãnh đạo một cơ sở đào tạo trước khi làm quản lý nhà nước: đứng ở trường và đứng ở Bộ, cách nhìn về việc triển khai khung khác nhau ở đâu? Điều gì lúc ở trường thấy rõ mà lên Bộ khó thấy, và ngược lại?</label>
+          <textarea id="f_orf_rector" name="f_orf_rector"></textarea>
+        </div>
+      </div>
+
+      <div class="block-head" data-fsub="Viện nghiên cứu" style="display:none;background:#EFF1F6;border-left-color:#3B5A8A">
+        <div class="tag" style="color:#3B5A8A">Dành cho người trực tiếp nghiên cứu AI</div>
+        <div class="name" style="font-size:15px">Thẩm định khái niệm năng lực AI của khung</div>
+      </div>
+      <div data-fsub="Viện nghiên cứu" style="display:none">
+        <div class="section-index"><span class="num">B1</span><h3>Khung có nắm được năng lực động không</h3><span class="rq">RQ2, MT1</span></div>
+        <div class="field">
+          <label class="q" for="f_ai_construct">Với tư cách người trực tiếp nghiên cứu AI: khung quan niệm năng lực AI đã nắm được khả năng tự điều chỉnh và đồng điều chỉnh cùng AI chưa, hay chủ yếu dừng ở kỹ năng thao tác? Điều gì quan trọng mà khung đang bỏ sót?</label>
+          <textarea id="f_ai_construct" name="f_ai_construct"></textarea>
+        </div>
+      </div>
+
+      <div class="section-index"><span class="num">2</span><h3>Bức tranh diễn giải toàn ngành</h3><span class="rq">RQ1</span></div>
+      <div class="field">
+        <label class="q" for="f_dienghiai">Từ vị trí quan sát của mình, ông/bà thấy khung năng lực số, AI đang được các trường diễn giải và triển khai theo những hướng nào? Có khác biệt lớn giữa các trường không?</label>
+        <textarea id="f_dienghiai" name="f_dienghiai"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">3</span><h3>Quan niệm năng lực trong ngành</h3><span class="rq">RQ2</span></div>
+      <div class="field">
+        <label class="q" for="f_quanniem">Trong những gì ông/bà đọc, thẩm định hoặc quan sát, năng lực AI đang được hiểu gần với một danh mục kỹ năng hay với năng lực tự điều chỉnh, đồng điều chỉnh cùng AI?</label>
+        <textarea id="f_quanniem" name="f_quanniem"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">4</span><h3>Khâu dễ giản lược</h3><span class="rq">RQ1, RQ2</span></div>
+      <div class="field">
+        <label class="q" for="f_giangluoc">Ở khâu nào của chuỗi từ văn bản đến lớp học, ông/bà thấy nội dung năng lực dễ bị giản lược nhất?</label>
+        <input type="text" id="f_giangluoc" name="f_giangluoc">
+      </div>
+
+      <div class="section-index"><span class="num">5</span><h3>Chủ thể kiểm soát</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="f_kiemsoat">Theo ông/bà, chủ thể nào đang thực sự kiểm soát cách hiểu và triển khai năng lực AI trong đào tạo giáo viên?</label>
+        <input type="text" id="f_kiemsoat" name="f_kiemsoat">
+      </div>
+
+      <div class="section-index"><span class="num">6</span><h3>Điều kiện triển khai thực chất</h3><span class="rq">RQ2, RQ3</span></div>
+      <div class="field">
+        <label class="q" for="f_thucchat">Điều kiện nào giúp một cơ sở triển khai tạo ra năng lực thực chất thay vì tuân thủ hình thức?</label>
+        <textarea id="f_thucchat" name="f_thucchat"></textarea>
+      </div>
+
+      <div class="section-index"><span class="num">7</span><h3>Khuyến nghị hệ thống</h3><span class="rq">RQ3</span></div>
+      <div class="field">
+        <label class="q" for="f_khuyennghi">Một khuyến nghị ở cấp chính sách hoặc hệ thống mà ông/bà cho là cần nhất.</label>
+        <textarea id="f_khuyennghi" name="f_khuyennghi"></textarea>
+      </div>
+    </div>
+
+    <!-- ===== NHẬN ĐỊNH CHUNG (Likert, cho D, B, C, E) ===== -->
+    <div class="block" data-block="INST">
+      <div class="section-index"><span class="num">★</span><h3>Một vài nhận định chung (tùy chọn)</h3></div>
+      <p class="hint" style="margin-top:2px">Chọn mức phản ánh đúng nhất tình hình ở đơn vị. Có thể bỏ qua.</p>
+      <div class="likert">
+        <p class="stem">Ở trường tôi, năng lực AI hiện chủ yếu được hiểu như một danh mục kỹ năng, thao tác cần đánh dấu hoàn thành.</p>
+        <div class="scale" data-name="lik_tinh">
+          <label><input type="radio" name="lik_tinh" value="1">1</label>
+          <label><input type="radio" name="lik_tinh" value="2">2</label>
+          <label><input type="radio" name="lik_tinh" value="3">3</label>
+          <label><input type="radio" name="lik_tinh" value="4">4</label>
+          <label><input type="radio" name="lik_tinh" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Rất không đồng ý</span><span>Rất đồng ý</span></div>
+      </div>
+      <div class="likert">
+        <p class="stem">Chương trình hiện nay tạo cơ hội để sinh viên tự đặt mục tiêu, tự giám sát và điều chỉnh việc học khi làm việc cùng AI.</p>
+        <div class="scale" data-name="lik_dong">
+          <label><input type="radio" name="lik_dong" value="1">1</label>
+          <label><input type="radio" name="lik_dong" value="2">2</label>
+          <label><input type="radio" name="lik_dong" value="3">3</label>
+          <label><input type="radio" name="lik_dong" value="4">4</label>
+          <label><input type="radio" name="lik_dong" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Rất không đồng ý</span><span>Rất đồng ý</span></div>
+      </div>
+      <div class="likert">
+        <p class="stem">Các yêu cầu về năng lực số hiện tồn tại chủ yếu để phục vụ kiểm định và báo cáo.</p>
+        <div class="scale" data-name="lik_baocao">
+          <label><input type="radio" name="lik_baocao" value="1">1</label>
+          <label><input type="radio" name="lik_baocao" value="2">2</label>
+          <label><input type="radio" name="lik_baocao" value="3">3</label>
+          <label><input type="radio" name="lik_baocao" value="4">4</label>
+          <label><input type="radio" name="lik_baocao" value="5">5</label>
+        </div>
+        <div class="scale-anchor"><span>Rất không đồng ý</span><span>Rất đồng ý</span></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="submit" id="submitBtn">Gửi phiếu</button>
+      <p class="err-msg" id="errMsg"></p>
+    </div>
+  </form>
+
+  <div class="state" id="sending">
+    <div class="spinner"></div>
+    <h2>Đang gửi</h2>
+    <p>Xin giữ nguyên cửa sổ này trong giây lát. Việc gửi có thể mất tới một phút.</p>
+  </div>
+  <div class="state" id="done">
+    <h2>Đã ghi nhận</h2>
+    <p>Cảm ơn thầy/cô. Phiếu đã được gửi. Thầy/cô có thể tham gia phần thảo luận nhóm ngay sau đây.</p>
+  </div>
+
+  <footer>
+    Đề tài NAFOSTED · Gói công việc WP4 · Trường Đại học Sư phạm - Đại học Đà Nẵng và cộng sự.
+  </footer>
+</div>
+
+<script>
+  // ====== CẤU HÌNH: dán URL Web App của Google Apps Script vào đây ======
+  const ENDPOINT_URL = "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE";
+  // ====================================================================
+
+  const form = document.getElementById('mainForm');
+  const roleSel = document.getElementById('vai_tro');
+  const errMsg = document.getElementById('errMsg');
+  const roleHint = document.getElementById('roleHint');
+
+  const ROUTE = {
+    "Giảng viên":"D",
+    "Quản lý CTĐT, tổ bộ môn hoặc tương đương":"B",
+    "Trưởng, phó khoa hoặc tương đương":"B",
+    "Lãnh đạo phòng Đào tạo, Khảo thí - ĐBCL":"C",
+    "Lãnh đạo trường hoặc tương đương":"E",
+    "Chuyên gia hệ thống: tạp chí, viện nghiên cứu, vụ, cục":"F"
+  };
+  const HINTS = {
+    "Khác":"Xin chọn vai trò gần nhất ở trên, hoặc liên hệ nhóm nghiên cứu nếu không có mục phù hợp."
+  };
+  const INST = ['D','B','C','E'];
+
+  function syncRole(){
+    const v = roleSel.value;
+    const target = ROUTE[v] || null;
+    document.querySelectorAll('.block').forEach(el=>{
+      const b = el.getAttribute('data-block');
+      let show = (b === target);
+      if(b === 'INST') show = INST.includes(target);
+      el.style.display = show ? 'block':'none';
+    });
+    if(HINTS[v]){ roleHint.textContent = HINTS[v]; roleHint.style.display='block'; }
+    else { roleHint.style.display='none'; }
+  }
+  roleSel.addEventListener('change', syncRole);
+  syncRole();
+
+  // Khối phụ trong nhánh F hiện theo tiểu loại chuyên gia (vụ/cục, viện nghiên cứu)
+  function syncFsub(){
+    const v = (form.querySelector('[name="f_vaitro"]:checked')||{}).value || '';
+    document.querySelectorAll('[data-fsub]').forEach(el=>{
+      el.style.display = (el.getAttribute('data-fsub') === v) ? 'block':'none';
+    });
+  }
+  form.querySelectorAll('[name="f_vaitro"]').forEach(r=>r.addEventListener('change', syncFsub));
+
+  const TEXT_FIELDS = [
+    'truong','vai_tro','khoa_bomon','so_nam',
+    'd_hieu','d_dieuchinh','d_hoatdong','d_chandung','d_tinhhuong','d_bomon','d_khop_vidu','d_thietke',
+    'b_dautien','b_thoigian','b_baoluu','b_chandung','b_quyetdinh','b_batdong_vidu','b_bomon_text','b_tinhhuong','b_tinhhuong_sau','b_dexuat',
+    'c_dautien','c_soanthao','c_tieuchi','c_ai_hoso','c_phanvai','c_baocao','c_khoangcach_text','c_dudchuan',
+    'e_uutien','e_nguonluc','e_theodoi','e_chandung','e_ngoai','e_dandat','e_dexuat',
+    'f_dienghiai','f_quanniem','f_giangluoc','f_kiemsoat','f_thucchat','f_khuyennghi',
+    'f_orf_lineage','f_orf_bientap','f_orf_rector','f_ai_construct'
+  ];
+  const RADIO_FIELDS = [
+    'd_huongdan','d_vaitro_quydinh','d_khop',
+    'b_batdong','b_bomon',
+    'c_phong','c_tiepnhan','c_kiemdinh','c_khoangcach',
+    'f_vaitro',
+    'lik_tinh','lik_dong','lik_baocao'
+  ];
+  const CHECK_FIELDS = [
+    'd_kenh','d_cancu','d_hoiai',
+    'b_kenh','b_thamgia','b_tinhhuong_cancu',
+    'c_sanpham'
+  ];
+
+  function collect(){
+    const d = {};
+    TEXT_FIELDS.forEach(n=>{
+      const el = form.querySelector(`[name="${n}"]`);
+      d[n] = el ? el.value.trim() : '';
+    });
+    RADIO_FIELDS.forEach(n=>{
+      const c = form.querySelector(`[name="${n}"]:checked`);
+      d[n] = c ? c.value : '';
+    });
+    CHECK_FIELDS.forEach(n=>{
+      d[n] = Array.from(form.querySelectorAll(`[name="${n}"]:checked`)).map(x=>x.value).join('; ');
+    });
+    return d;
+  }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    errMsg.style.display='none';
+    if(!document.getElementById('consent').checked){
+      errMsg.textContent='Xin đánh dấu đồng ý tham gia trước khi gửi.'; errMsg.style.display='block'; return;
+    }
+    if(!roleSel.value){
+      errMsg.textContent='Xin chọn vai trò.'; errMsg.style.display='block'; roleSel.focus(); return;
+    }
+    if(!document.getElementById('truong').value.trim()){
+      errMsg.textContent='Xin điền trường hoặc đơn vị công tác.'; errMsg.style.display='block'; return;
+    }
+    if(ENDPOINT_URL.indexOf('PASTE_')===0){
+      errMsg.textContent='Phiếu chưa được kết nối với nơi lưu dữ liệu. Xin báo nhóm nghiên cứu.'; errMsg.style.display='block'; return;
+    }
+    const data = collect();
+    form.style.display='none';
+    document.getElementById('sending').style.display='block';
+    try{
+      await fetch(ENDPOINT_URL, {
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+        body:new URLSearchParams(data).toString()
+      });
+      document.getElementById('sending').style.display='none';
+      document.getElementById('done').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }catch(err){
+      document.getElementById('sending').style.display='none';
+      form.style.display='block';
+      errMsg.textContent='Chưa gửi được, có thể do kết nối mạng. Xin thử lại hoặc báo nhóm nghiên cứu.';
+      errMsg.style.display='block';
+    }
+  });
+</script>
+</body>
+</html>
