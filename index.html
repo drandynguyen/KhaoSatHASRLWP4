@@ -87,7 +87,7 @@
     <div class="card note">
       <h2>Thông tin tham gia</h2>
       <p class="lead">Phiếu ghi nhận ý kiến cá nhân của thầy/cô về cách khung năng lực số quốc gia (Thông tư 02/2025 dành cho người học; Thông tư 18/2026 dành cho giáo viên, cán bộ quản lý) đang được diễn giải và triển khai. Thầy/cô trả lời độc lập, trước phần thảo luận nhóm.</p>
-      <p class="lead">Tham gia là tự nguyện và ẩn danh. Dữ liệu được mã hóa, chỉ dùng cho mục đích nghiên cứu, không nêu danh tính trong mọi ấn phẩm. Có thể bỏ trống bất kỳ câu nào.</p>
+      <p class="lead">Tham gia là tự nguyện và ẩn danh. Dữ liệu được mã hóa, chỉ dùng cho mục đích nghiên cứu, không nêu danh tính trong mọi ấn phẩm. Phiếu đề nghị trả lời đầy đủ các câu trong phần dành cho vai trò của thầy/cô; có thể bấm Lưu tạm để làm tiếp sau trên cùng thiết bị.</p>
       <p class="lead">Câu trả lời được tự lưu tạm trên chính thiết bị này. Thầy/cô có thể đóng và mở lại đúng đường link để làm tiếp, miễn là dùng cùng máy và cùng trình duyệt.</p>
       <div class="consent-check">
         <input type="checkbox" id="consent" required>
@@ -559,8 +559,8 @@
 
     <!-- ===== NHẬN ĐỊNH CHUNG (Likert, cho D, B, C, E) ===== -->
     <div class="block" data-block="INST">
-      <div class="section-index"><span class="num">★</span><h3>Một vài nhận định chung (tùy chọn)</h3></div>
-      <p class="hint" style="margin-top:2px">Chọn mức phản ánh đúng nhất tình hình ở đơn vị. Có thể bỏ qua.</p>
+      <div class="section-index"><span class="num">★</span><h3>Một vài nhận định chung</h3></div>
+      <p class="hint" style="margin-top:2px">Chọn mức phản ánh đúng nhất tình hình ở đơn vị.</p>
       <div class="likert">
         <p class="stem">Ở trường tôi, năng lực AI hiện chủ yếu được hiểu như một danh mục kỹ năng, thao tác cần đánh dấu hoàn thành.</p>
         <div class="scale" data-name="lik_tinh">
@@ -597,7 +597,10 @@
     </div>
 
     <div class="actions">
-      <button type="submit" class="submit" id="submitBtn">Gửi phiếu</button>
+      <div style="display:flex;gap:10px">
+        <button type="button" id="saveBtn" style="flex:1;font:inherit;font-weight:600;font-size:15px;color:var(--pine);background:#fff;border:1.5px solid var(--pine);border-radius:var(--radius);padding:14px;min-height:52px;cursor:pointer">Lưu tạm</button>
+        <button type="submit" class="submit" id="submitBtn" style="flex:2">Gửi phiếu</button>
+      </div>
       <p class="err-msg" id="errMsg"></p>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px">
         <span id="draftNote" style="font-size:12.5px;color:var(--ink-soft)"></span>
@@ -618,6 +621,7 @@
 
   <footer>
     Đề tài NAFOSTED · Gói công việc WP4 · Trường Đại học Sư phạm - Đại học Đà Nẵng và cộng sự.
+    <br>Phiên bản phiếu: v4 - 10/7/2026, bắt buộc trả lời đủ, có nút Lưu tạm.
   </footer>
 </div>
 
@@ -729,6 +733,40 @@
   });
   restoreDraft();
 
+  // Nút lưu tạm thủ công
+  document.getElementById('saveBtn').addEventListener('click', ()=>{
+    saveDraft();
+    if(draftNote){
+      draftNote.textContent = 'Đã lưu tạm trên thiết bị này. Mở lại đúng link trên cùng máy để làm tiếp.';
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(()=>{ draftNote.textContent=''; }, 5000);
+    }
+  });
+
+  // ===== Bắt buộc trả lời: chỉ áp cho các câu đang hiển thị theo vai trò =====
+  const OPTIONAL_FIELDS = ['f_orf_lineage','f_orf_bientap','f_orf_rector']; // câu điều kiện "nếu..."
+  function isShown(el){ return el.offsetParent !== null; }
+  function findMissing(){
+    const groups = {};
+    form.querySelectorAll('[name]').forEach(el=>{
+      const n = el.name;
+      if(!n || OPTIONAL_FIELDS.includes(n)) return;
+      if(!isShown(el)) return;
+      (groups[n] = groups[n] || []).push(el);
+    });
+    const missing = [];
+    Object.keys(groups).forEach(n=>{
+      const els = groups[n];
+      const t = els[0].type;
+      let ok;
+      if(t==='radio'||t==='checkbox'){ ok = els.some(e=>e.checked); }
+      else { ok = els[0].value.trim() !== ''; }
+      if(!ok) missing.push(els[0]);
+    });
+    return missing;
+  }
+
+
   const TEXT_FIELDS = [
     'truong','vai_tro','khoa_bomon','so_nam',
     'd_hieu','d_dieuchinh','d_hoatdong','d_chandung','d_tinhhuong','d_bomon','d_khop_vidu','d_thietke',
@@ -781,6 +819,17 @@
     }
     if(ENDPOINT_URL.indexOf('PASTE_')===0){
       errMsg.textContent='Phiếu chưa được kết nối với nơi lưu dữ liệu. Xin báo nhóm nghiên cứu.'; errMsg.style.display='block'; return;
+    }
+    const missing = findMissing();
+    if(missing.length > 0){
+      errMsg.textContent = 'Còn ' + missing.length + ' câu chưa trả lời. Xin hoàn thành trước khi gửi, hoặc bấm Lưu tạm để làm tiếp sau.';
+      errMsg.style.display='block';
+      const el = missing[0];
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      const box = el.closest('.field') || el.closest('.likert') || el;
+      box.style.outline = '2px solid var(--warn)';
+      setTimeout(()=>{ box.style.outline=''; }, 3500);
+      return;
     }
     const data = collect();
     form.style.display='none';
