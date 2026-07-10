@@ -88,6 +88,7 @@
       <h2>Thông tin tham gia</h2>
       <p class="lead">Phiếu ghi nhận ý kiến cá nhân của thầy/cô về cách khung năng lực số quốc gia (Thông tư 02/2025 dành cho người học; Thông tư 18/2026 dành cho giáo viên, cán bộ quản lý) đang được diễn giải và triển khai. Thầy/cô trả lời độc lập, trước phần thảo luận nhóm.</p>
       <p class="lead">Tham gia là tự nguyện và ẩn danh. Dữ liệu được mã hóa, chỉ dùng cho mục đích nghiên cứu, không nêu danh tính trong mọi ấn phẩm. Có thể bỏ trống bất kỳ câu nào.</p>
+      <p class="lead">Câu trả lời được tự lưu tạm trên chính thiết bị này. Thầy/cô có thể đóng và mở lại đúng đường link để làm tiếp, miễn là dùng cùng máy và cùng trình duyệt.</p>
       <div class="consent-check">
         <input type="checkbox" id="consent" required>
         <label for="consent">Tôi đã đọc thông tin trên và đồng ý tham gia. <span class="req">*</span></label>
@@ -598,6 +599,10 @@
     <div class="actions">
       <button type="submit" class="submit" id="submitBtn">Gửi phiếu</button>
       <p class="err-msg" id="errMsg"></p>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px">
+        <span id="draftNote" style="font-size:12.5px;color:var(--ink-soft)"></span>
+        <button type="button" id="clearDraftBtn" style="font:inherit;font-size:12.5px;color:var(--warn);background:none;border:none;text-decoration:underline;cursor:pointer;padding:4px">Xóa nháp, bắt đầu lại</button>
+      </div>
     </div>
   </form>
 
@@ -618,7 +623,7 @@
 
 <script>
   // ====== CẤU HÌNH: dán URL Web App của Google Apps Script vào đây ======
-  const ENDPOINT_URL = "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE";
+  const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbyx34SmH0UEk4hEpvZVaq1HSvY1L7xDjZ5Q6Y689hejHSzCUv6J7GCzWKs5SfdaJn4B/exec";
   // ====================================================================
 
   const form = document.getElementById('mainForm');
@@ -662,6 +667,67 @@
     });
   }
   form.querySelectorAll('[name="f_vaitro"]').forEach(r=>r.addEventListener('change', syncFsub));
+
+  // ===== Tự lưu nháp trên thiết bị người trả lời (localStorage) =====
+  // Chỉ an toàn khi mỗi người dùng một máy. Thiết bị dùng chung phải bấm "Xóa nháp" giữa mỗi lượt.
+  const DRAFT_KEY = 'wp4_draft_v3';
+  const draftNote = document.getElementById('draftNote');
+  let noteTimer = null;
+
+  function showSaved(){
+    if(!draftNote) return;
+    draftNote.textContent = 'Đã lưu nháp trên thiết bị này';
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(()=>{ draftNote.textContent=''; }, 2500);
+  }
+
+  function saveDraft(){
+    try{
+      const d = {};
+      form.querySelectorAll('[name]').forEach(el=>{
+        const n = el.name;
+        if(el.type==='checkbox'||el.type==='radio'){
+          if(el.checked){ (d[n]=d[n]||[]).push(el.value); }
+        } else { d[n] = el.value; }
+      });
+      d.__consent = document.getElementById('consent').checked;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+      showSaved();
+    }catch(e){ /* chế độ riêng tư hoặc bộ nhớ đầy: bỏ qua, không chặn người dùng */ }
+  }
+
+  function restoreDraft(){
+    try{
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if(!raw) return;
+      const d = JSON.parse(raw);
+      Object.keys(d).forEach(n=>{
+        if(n==='__consent'){ document.getElementById('consent').checked = !!d[n]; return; }
+        form.querySelectorAll(`[name="${n}"]`).forEach(el=>{
+          if(el.type==='checkbox'||el.type==='radio'){
+            el.checked = Array.isArray(d[n]) && d[n].includes(el.value);
+          } else { el.value = d[n]; }
+        });
+      });
+      syncRole(); syncFsub();
+      if(draftNote){ draftNote.textContent='Đã khôi phục nháp trước đó trên thiết bị này'; }
+    }catch(e){}
+  }
+
+  function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
+
+  form.addEventListener('input', saveDraft);
+  form.addEventListener('change', saveDraft);
+  document.getElementById('clearDraftBtn').addEventListener('click', ()=>{
+    if(confirm('Xóa toàn bộ nháp trên thiết bị này và bắt đầu lại từ đầu?')){
+      clearDraft();
+      form.reset();
+      syncRole(); syncFsub();
+      if(draftNote){ draftNote.textContent=''; }
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  });
+  restoreDraft();
 
   const TEXT_FIELDS = [
     'truong','vai_tro','khoa_bomon','so_nam',
@@ -727,6 +793,7 @@
       });
       document.getElementById('sending').style.display='none';
       document.getElementById('done').style.display='block';
+      clearDraft();
       window.scrollTo({top:0,behavior:'smooth'});
     }catch(err){
       document.getElementById('sending').style.display='none';
